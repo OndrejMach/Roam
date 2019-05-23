@@ -1,0 +1,93 @@
+package cz.tmobile.cdrstore.roam.dataaccess
+
+object CallEventTypes extends Enumeration {
+  type CallEventDetails = Value
+  val gprsCall = Value("gprsCall")
+  val mobileOriginatedCall = Value("mobileOriginatedCall")
+  val mobileTerminatedCall = Value("mobileTerminatedCall")
+  val supplServiceEvent = Value("supplServiceEvent")
+}
+
+object AnonEventsColumns extends Enumeration {
+  type AnonColumns = Value
+  val id = Value("id")
+  val call_event_date = Value("call_event_date")
+  val version = Value("version")
+  val filename = Value("filename")
+  val sender = Value("sender")
+  val recipient = Value("recipient")
+  val location_area = Value("location_area")
+  val cause_for_term = Value("cause_for_term")
+  val file_sequence_number = Value("file_sequence_number")
+  val rap_file_sequence_number = Value("rap_file_sequence_number")
+  val tap_currency = Value("tap_currency")
+  val tap_decimal_places = Value("tap_decimal_places")
+  val rec_entity_code = Value("rec_entity_code")
+  val charged_item = Value("charged_item")
+  val charge_type = Value("charge_type")
+  val call_type_level1 = Value("call_type_level1")
+  val call_type_level2 = Value("call_type_level2")
+  val call_type_level3 = Value("call_type_level3")
+  val camel_flag = Value("camel_flag")
+  val access_point_name_ni = Value("access_point_name_ni")
+  val tele_service_code = Value("tele_service_code")
+  val tac_code = Value("tac_code")
+  val local_timestamp = Value("local_timestamp")
+  val utc_time_offset = Value("utc_time_offset")
+  val imsi_hash = Value("imsi_hash")
+  val imei_hash = Value("imei_hash")
+  val device_type = Value("device_type")
+  val manufacturer = Value("manufacturer")
+  val msisdn_hash = Value("msisdn_hash")
+  val msisdn_country_code = Value("msisdn_country_code")
+  val pdp_address_hash = Value("pdp_address_hash")
+  val cell_id_hash = Value("cell_id_hash")
+  val charging_id = Value("charging_id")
+  val call_reference = Value("call_reference")
+  val event_reference = Value("event_reference")
+  val called_number_network_code = Value("called_number_network_code")
+  val dialled_digits_network_code = Value("dialled_digits_network_code")
+  val called_party_gnf_iso2 = Value("called_party_gnf_iso2")
+  val third_party_number_network_code = Value("third_party_number_network_code")
+  val camel_destination_number_network_code = Value("camel_destination_number_network_code")
+  val sms_destination_number_network_code = Value("sms_destination_number_network_code")
+  val calling_number_network_code = Value("calling_number_network_code")
+  val sms_originator_network_code = Value("sms_originator_network_code")
+  val non_charged_party_number_network_code = Value("non_charged_party_number_network_code")
+  val requested_number_network_code = Value("requested_number_network_code")
+  val clir_indicator = Value("clir_indicator")
+  val total_call_event_duration = Value("total_call_event_duration")
+  val data_volume_incoming = Value("data_volume_incoming")
+  val data_volume_outgoing = Value("data_volume_outgoing")
+  val charge = Value("charge")
+  val chargeable_units = Value("chargeable_units")
+  val charged_units = Value("charged_units")
+  val total_charge = Value("total_charge")
+  val total_chargeable_units = Value("total_chargeable_units")
+  val total_charged_units = Value("total_charged_units")
+  val tax_value = Value("tax_value")
+  val m2m_flag = Value("m2m_flag")
+  val json_object = Value("json_object")
+  val load_date = Value("load_date")
+  val called_number_hash = Value("called_number_hash")
+  val dialled_digits = Value("dialled_digits")
+  val third_party_number = Value("third_party_number")
+  val camel_destination_number = Value("camel_destination_number")
+  val sms_destination_number = Value("sms_destination_number")
+  val calling_number_hash = Value("calling_number_hash")
+  val sms_originator = Value("sms_originator")
+  val msisdn_trunc_hash = Value("msisdn_trunc_hash")
+  val called_number_trunc_hash = Value("called_number_trunc_hash")
+  val calling_number_trunc_hash = Value("calling_number_trunc_hash")
+}
+
+object AnonColumnsOut extends Enumeration {
+  type AnonColumnsOut
+  val tac_frequency = Value("tac_frequency")
+}
+
+object AnonEventDatesColumns extends Enumeration{
+  type AnonEventDates
+  val event_date = Value("event_date")
+  val event_type = Value("event_type")
+}

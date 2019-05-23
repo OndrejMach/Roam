@@ -1,0 +1,6 @@
+.idea
+*.gz
+.gradle
+build
+spark-warehouse
+out
