@@ -6,18 +6,22 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 
 
 class AnonProcessor(srcDataReader: SrcDataReader, eventReader: EventReader, eventDatesReader: EventDatesReader, eventWriter: EventWriter, config: Config)(implicit sparkSession: SparkSession) extends Processor {
-  def mergeStageandSRCData(stage: DataFrame, src: DataFrame) = {
-    stage.union(src)
+  def mergeStageandSRCData(stage: DataFrame, src: DataFrame) : DataFrame = {
+    if (src.rdd.isEmpty()) {
+      stage
+    } else {
+      stage.union(src)
+    }
   }
 
-  def joinWithEventDates(events: DataFrame, eventDates: DataFrame, eventType: String) = {
+  def joinWithEventDates(events: DataFrame, eventDates: DataFrame, eventType: String) :DataFrame = {
     events
       .join(eventDates.filter(eventDates(AnonEventDatesColumns.event_type.toString) === eventType),
-        eventDates.col(AnonEventsColumns.call_event_date.toString) === events.col(AnonEventsColumns.call_event_date.toString))
-      .drop(events.col(AnonEventsColumns.call_event_date.toString))
+        eventDates.col(AnonEventDatesColumns.event_date.toString) === events.col(AnonEventsColumns.call_event_date.toString))
+      .drop(eventDates.col(AnonEventDatesColumns.event_date.toString))
   }
 
-  def calculateTacFrequencies(events: DataFrame) = {
+  def calculateTacFrequencies(events: DataFrame) : DataFrame = {
     events
       .select(AnonEventsColumns.imei_hash.toString, AnonEventsColumns.tac_code.toString, AnonEventsColumns.call_event_date.toString)
       .distinct()
@@ -27,7 +31,7 @@ class AnonProcessor(srcDataReader: SrcDataReader, eventReader: EventReader, even
       .withColumnRenamed("count", AnonColumnsOut.tac_frequency.toString)
   }
 
-  def getWithFrequencies(events: DataFrame, frequencies: DataFrame) = {
+  def getWithFrequencies(events: DataFrame, frequencies: DataFrame) :DataFrame = {
     events
       .join(frequencies, (frequencies(AnonEventsColumns.tac_code.toString) === events(AnonEventsColumns.tac_code.toString))
         && (frequencies(AnonEventsColumns.call_event_date.toString) === events(AnonEventsColumns.call_event_date.toString)), "left")
@@ -49,14 +53,14 @@ class AnonProcessor(srcDataReader: SrcDataReader, eventReader: EventReader, even
       CallEventTypes.values.toSeq.foreach { eventType =>
         val event = eventType.toString
 
-        logger.info(s"Reading events for ${event}")
+        logger.info(s"Reading events for $event")
         val eventsStage = eventReader.readStageData(event)
 
         if (eventsStage.rdd.isEmpty()) {
           logger.warn("No stage data to process")
         } else {
 
-          logger.info(s"reading src data for ${event}")
+          logger.info(s"reading src data for $event")
           val srcData = srcDataReader.readData(event)
 
           logger.info("Merging SRC and STAGE data")
@@ -72,7 +76,7 @@ class AnonProcessor(srcDataReader: SrcDataReader, eventReader: EventReader, even
           val withFrequencies = getWithFrequencies(eventsForDates, tacFrequencies)
 
           logger.info("Writing output")
-          val partitioningColumns = Seq(AnonEventDatesColumns.event_type.toString, AnonEventDatesColumns.event_date.toString)
+          val partitioningColumns = Seq(AnonEventDatesColumns.event_type.toString, AnonEventsColumns.call_event_date.toString)
           eventWriter.writeData(withFrequencies,
             partitioningColumns,
             config.parameters.anonTmpDir)
